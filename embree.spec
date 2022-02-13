@@ -11,6 +11,7 @@ BuildRequires:	OpenGL-devel
 BuildRequires:	cmake
 BuildRequires:	libjpeg-devel
 BuildRequires:	tbb-devel
+ExclusiveArch:	%{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -44,11 +45,7 @@ Pliki nagłówkowe biblioteki %{name}.
 mkdir -p build
 cd build
 %cmake ../ \
-%ifarch %{x8664} x32
 	-DEMBREE_MAX_ISA=SSE4.2 \
-%else
-	-DEMBREE_MAX_ISA=NONE \
-%endif
 	-DEMBREE_IGNORE_CMAKE_CXX_FLAGS=OFF \
 	-DCMAKE_CXX_STANDARD=17 \
 	-DEMBREE_ISPC_SUPPORT=OFF \
