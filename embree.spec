@@ -1,11 +1,12 @@
 Summary:	High Performance Ray Tracing Kernels
 Name:		embree
-Version:	3.13.3
+Version:	4.4.0
 Release:	1
 License:	Apache v2.0
 Group:		Libraries
 Source0:	https://github.com/embree/embree/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	61aee19db0341a8353289043617975a7
+# Source0-md5:	86bdca35c68b8016681dc5de102a3fa1
+Patch0:		cmake-pld.patch
 URL:		https://www.embree.org/
 BuildRequires:	OpenGL-devel
 BuildRequires:	cmake
@@ -40,6 +41,7 @@ Pliki nagłówkowe biblioteki %{name}.
 
 %prep
 %setup -q
+%patch -P0 -p1
 
 %build
 mkdir -p build
@@ -59,6 +61,11 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+cd $RPM_BUILD_ROOT%{_mandir}/man3/
+for f in *.4embree4 ; do
+	%{__mv} "$f" "$(basename "$f" .4embree4).3embree4"
+done
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -68,12 +75,11 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc CHANGELOG.md README.md SECURITY.md
-%attr(755,root,root) %{_libdir}/libembree3.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libembree3.so.3
+%attr(755,root,root) %{_libdir}/libembree4.so.4
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libembree3.so
-%{_includedir}/%{name}3
+%attr(755,root,root) %{_libdir}/libembree4.so
+%{_includedir}/%{name}4
 %{_libdir}/cmake/%{name}-%{version}
-%{_mandir}/man3/*.3embree3*
+%{_mandir}/man3/*.3embree4*
